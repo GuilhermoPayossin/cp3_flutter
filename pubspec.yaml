@@ -1,0 +1,18 @@
+name: cp3_aluguel_veiculos
+description: Calculadora simples de aluguel de veículos.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.5
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
