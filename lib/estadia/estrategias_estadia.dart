@@ -48,4 +48,3 @@ class EstadiaSuitePremium implements EstadiaStrategy {
     return noites * 500.0 + 100.0;
   }
 }
-

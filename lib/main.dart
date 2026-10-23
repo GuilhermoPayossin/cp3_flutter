@@ -283,4 +283,3 @@ String formatarReais(double valor) {
 
   return 'R\$ ${resultado.toString()},${partes[1]}';
 }
-

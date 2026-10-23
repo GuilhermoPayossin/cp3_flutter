@@ -9,4 +9,3 @@ class CalculadoraEstadia {
     return estrategia.calcular(noites);
   }
 }
-
