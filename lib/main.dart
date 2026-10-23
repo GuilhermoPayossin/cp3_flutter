@@ -134,7 +134,8 @@ class _TelaEstadiaState extends State<TelaEstadia> {
                       ),
                       SizedBox(height: 6),
                       Text(
-                        'Escolha o quarto e informe quantas noites pretende ficar.',
+                        'Escolha o quarto e informe quantas noites '
+                        'pretende ficar.',
                         style: TextStyle(color: Colors.white70, height: 1.4),
                       ),
                     ],
@@ -195,7 +196,9 @@ class _TelaEstadiaState extends State<TelaEstadia> {
                         TextField(
                           controller: _noitesController,
                           keyboardType: TextInputType.number,
-                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
                           decoration: const InputDecoration(
                             labelText: 'Quantidade de noites',
                             border: OutlineInputBorder(),
