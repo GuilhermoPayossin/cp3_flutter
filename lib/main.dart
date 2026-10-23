@@ -1,66 +1,72 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'aluguel/aluguel_strategy.dart';
-import 'aluguel/calculadora_aluguel.dart';
-import 'aluguel/estrategias_aluguel.dart';
+import 'estadia/calculadora_estadia.dart';
+import 'estadia/estadia_strategy.dart';
+import 'estadia/estrategias_estadia.dart';
 
 void main() {
-  runApp(const AluguelApp());
+  runApp(const EstadiaApp());
 }
 
-class AluguelApp extends StatelessWidget {
-  const AluguelApp({super.key});
+class EstadiaApp extends StatelessWidget {
+  const EstadiaApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const azul = Color(0xFF142A3A);
-    const amarelo = Color(0xFFF2A900);
+    const verde = Color(0xFF234D3A);
+    const terracota = Color(0xFFC87952);
 
     return MaterialApp(
-      title: 'Aluguel de Veículos',
+      title: 'Simulador de Estadia',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: amarelo),
-        scaffoldBackgroundColor: const Color(0xFFF1F4F7),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: azul,
-          foregroundColor: Colors.white,
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: verde),
+        scaffoldBackgroundColor: const Color(0xFFF6F1E8),
         useMaterial3: true,
+        inputDecorationTheme: const InputDecorationTheme(
+          filled: true,
+          fillColor: Color(0xFFFBF9F5),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: terracota,
+            foregroundColor: Colors.white,
+          ),
+        ),
       ),
-      home: const TelaAluguel(),
+      home: const TelaEstadia(),
     );
   }
 }
 
-class TelaAluguel extends StatefulWidget {
-  const TelaAluguel({super.key});
+class TelaEstadia extends StatefulWidget {
+  const TelaEstadia({super.key});
 
   @override
-  State<TelaAluguel> createState() => _TelaAluguelState();
+  State<TelaEstadia> createState() => _TelaEstadiaState();
 }
 
-class _TelaAluguelState extends State<TelaAluguel> {
-  final TextEditingController _diariasController = TextEditingController();
-  AluguelStrategy _estrategiaSelecionada = const AluguelEconomico();
+class _TelaEstadiaState extends State<TelaEstadia> {
+  final TextEditingController _noitesController = TextEditingController();
+  EstadiaStrategy _estrategiaSelecionada = const EstadiaStandard();
   double? _valorTotal;
   String? _mensagemErro;
 
-  void _calcularAluguel() {
-    final diarias = int.tryParse(_diariasController.text);
+  void _calcularEstadia() {
+    final noites = int.tryParse(_noitesController.text);
 
-    if (diarias == null) {
+    if (noites == null) {
       setState(() {
         _valorTotal = null;
-        _mensagemErro = 'Informe a quantidade de diárias.';
+        _mensagemErro = 'Informe a quantidade de noites.';
       });
       return;
     }
 
     try {
-      final calculadora = CalculadoraAluguel(_estrategiaSelecionada);
-      final valor = calculadora.calcular(diarias);
+      final calculadora = CalculadoraEstadia(_estrategiaSelecionada);
+      final valor = calculadora.calcular(noites);
 
       setState(() {
         _valorTotal = valor;
@@ -69,32 +75,23 @@ class _TelaAluguelState extends State<TelaAluguel> {
     } on ArgumentError {
       setState(() {
         _valorTotal = null;
-        _mensagemErro = 'A quantidade de diárias deve ser zero ou maior.';
+        _mensagemErro = 'A quantidade de noites deve ser zero ou maior.';
       });
     }
   }
 
   @override
   void dispose() {
-    _diariasController.dispose();
+    _noitesController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    const azul = Color(0xFF142A3A);
-    const amarelo = Color(0xFFF2A900);
+    const verde = Color(0xFF234D3A);
+    const terracota = Color(0xFFC87952);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Row(
-          children: [
-            Icon(Icons.directions_car_filled_rounded),
-            SizedBox(width: 10),
-            Text('ROTA • LOCAÇÃO'),
-          ],
-        ),
-      ),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
@@ -103,51 +100,86 @@ class _TelaAluguelState extends State<TelaAluguel> {
               padding: const EdgeInsets.all(24),
               children: [
                 const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: verde,
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  child: const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.hotel_class_outlined, color: Colors.white),
+                          SizedBox(width: 8),
+                          Text(
+                            'CASA AURORA',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1.2,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 22),
+                      Text(
+                        'Simulador de estadia',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 28,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      SizedBox(height: 6),
+                      Text(
+                        'Escolha o quarto e informe quantas noites pretende ficar.',
+                        style: TextStyle(color: Colors.white70, height: 1.4),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
                 const Text(
-                  'SIMULE SUA RESERVA',
+                  'Detalhes da reserva',
                   style: TextStyle(
-                    color: Color(0xFF60717E),
-                    fontSize: 12,
+                    color: verde,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    letterSpacing: 1.4,
                   ),
                 ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Aluguel de veículos',
-                  style: TextStyle(
-                    color: azul,
-                    fontSize: 30,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 Card(
                   color: Colors.white,
-                  elevation: 1,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    side: const BorderSide(color: Color(0xFFE5DDD1)),
+                  ),
                   child: Padding(
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(18),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        DropdownButtonFormField<AluguelStrategy>(
+                        DropdownButtonFormField<EstadiaStrategy>(
                           value: _estrategiaSelecionada,
                           decoration: const InputDecoration(
-                            labelText: 'Categoria do veículo',
+                            labelText: 'Categoria do quarto',
                             border: OutlineInputBorder(),
                           ),
                           items: const [
                             DropdownMenuItem(
-                              value: AluguelEconomico(),
-                              child: Text('Econômico'),
+                              value: EstadiaStandard(),
+                              child: Text('Standard'),
                             ),
                             DropdownMenuItem(
-                              value: AluguelExecutivo(),
-                              child: Text('Executivo'),
+                              value: EstadiaLuxo(),
+                              child: Text('Luxo'),
                             ),
                             DropdownMenuItem(
-                              value: AluguelSUV(),
-                              child: Text('SUV'),
+                              value: EstadiaSuitePremium(),
+                              child: Text('Suíte Premium'),
                             ),
                           ],
                           onChanged: (estrategia) {
@@ -159,34 +191,32 @@ class _TelaAluguelState extends State<TelaAluguel> {
                             });
                           },
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 14),
                         TextField(
-                          controller: _diariasController,
+                          controller: _noitesController,
                           keyboardType: TextInputType.number,
                           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                           decoration: const InputDecoration(
-                            labelText: 'Quantidade de diárias',
+                            labelText: 'Quantidade de noites',
                             border: OutlineInputBorder(),
                           ),
-                          onSubmitted: (_) => _calcularAluguel(),
+                          onSubmitted: (_) => _calcularEstadia(),
                         ),
-                        const SizedBox(height: 20),
-                        FilledButton.icon(
-                          style: FilledButton.styleFrom(
-                            backgroundColor: amarelo,
-                            foregroundColor: azul,
-                            padding: const EdgeInsets.symmetric(vertical: 15),
+                        const SizedBox(height: 18),
+                        SizedBox(
+                          height: 50,
+                          child: ElevatedButton.icon(
+                            onPressed: _calcularEstadia,
+                            icon: const Icon(Icons.king_bed_outlined),
+                            label: const Text('Calcular estadia'),
                           ),
-                          onPressed: _calcularAluguel,
-                          icon: const Icon(Icons.calculate_outlined),
-                          label: const Text('Calcular aluguel'),
                         ),
                       ],
                     ),
                   ),
                 ),
                 if (_mensagemErro != null) ...[
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 14),
                   Text(
                     _mensagemErro!,
                     style: const TextStyle(color: Colors.red),
@@ -195,28 +225,33 @@ class _TelaAluguelState extends State<TelaAluguel> {
                 if (_valorTotal != null) ...[
                   const SizedBox(height: 16),
                   Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: azul,
-                      borderRadius: BorderRadius.circular(12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 18,
+                      vertical: 16,
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF0DDCE),
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: const Color(0xFFE0C0A9)),
+                    ),
+                    child: Row(
                       children: [
-                        const Text(
-                          'VALOR TOTAL DA RESERVA',
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 12,
-                            letterSpacing: 1,
+                        const Icon(Icons.receipt_long_outlined, color: verde),
+                        const SizedBox(width: 12),
+                        const Expanded(
+                          child: Text(
+                            'Total da reserva',
+                            style: TextStyle(
+                              color: verde,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
-                        const SizedBox(height: 6),
                         Text(
                           formatarReais(_valorTotal!),
                           style: const TextStyle(
-                            color: amarelo,
-                            fontSize: 30,
+                            color: verde,
+                            fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -248,3 +283,4 @@ String formatarReais(double valor) {
 
   return 'R\$ ${resultado.toString()},${partes[1]}';
 }
+
