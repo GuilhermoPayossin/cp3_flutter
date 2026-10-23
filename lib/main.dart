@@ -163,7 +163,9 @@ class _TelaAluguelState extends State<TelaAluguel> {
                         TextField(
                           controller: _diariasController,
                           keyboardType: TextInputType.number,
-                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
                           decoration: const InputDecoration(
                             labelText: 'Quantidade de diárias',
                             border: OutlineInputBorder(),
